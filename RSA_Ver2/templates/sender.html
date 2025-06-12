@@ -1,0 +1,30 @@
+<!-- sender.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Người Gửi - Ký File</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Gửi File Có Ký Số</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" name="file" required />
+      <button type="submit">📝 Ký và Gửi</button>
+    </form>
+
+    <div id="result" style="display: none">
+      <h3>✅ Kết quả ký</h3>
+      <p><strong>Chữ ký:</strong></p>
+      <textarea id="signature" readonly></textarea>
+      <p><strong>Public Key:</strong></p>
+      <textarea id="publicKey" readonly></textarea>
+    </div>
+  </div>
+
+
+  <script src="/static/script.js"></script>
+</body>
+</html>

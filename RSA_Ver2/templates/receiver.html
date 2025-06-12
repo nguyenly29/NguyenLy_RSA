@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Người Nhận - Xác Minh File</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Xác Minh Chữ Ký Số</h1>
+    <form id="verifyForm">
+      <input type="file" name="file" id="fileInput" required />
+      <textarea name="signature" id="sigField" placeholder="Chữ ký số (Base64)" required></textarea>
+      <textarea name="public_key" id="keyField" placeholder="Public Key (Base64)" required></textarea>
+      <button type="submit">🔐 Xác Minh</button>
+    </form>
+    <div id="verifyResult"></div>
+  </div>
+
+  <script>
+document.getElementById("fileInput").onchange = async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const sigFileName = file.name + ".signed.json";
+
+  // Gọi API để tải chữ ký kèm theo
+  try {
+    const res = await fetch(`/download/${sigFileName}`);
+    if (!res.ok) {
+      alert("Không tìm thấy file chữ ký kèm theo!");
+      return;
+    }
+
+    const json = await res.json();
+    document.getElementById("sigField").value = json.signature;
+    document.getElementById("keyField").value = json.public_key;
+  } catch (err) {
+    alert("Lỗi khi tải chữ ký: " + err);
+  }
+};
+
+document.getElementById("verifyForm").onsubmit = async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const res = await fetch("/verify", {
+    method: "POST",
+    body: formData,
+  });
+  const data = await res.json();
+  document.getElementById("verifyResult").innerText =
+    data.valid ? "✅ Chữ ký hợp lệ" : "❌ Chữ ký không hợp lệ";
+};
+</script>
+</body>
+</html>
